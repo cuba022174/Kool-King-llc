@@ -73,7 +73,7 @@ export default function MobileDrawer() {
             <div className="flex items-center justify-between border-b border-white/10 px-6 py-5">
               <span className="flex items-center gap-2.5 font-heading text-base font-semibold text-chrome">
                 <span className="flex h-9 w-9 items-center justify-center rounded-lg border border-cryo/30 bg-cryo/10 text-cryo">
-                  <Snowflake className="h-5 w-5" />
+                  <Snowflake className="h-5 w-5" aria-hidden="true" />
                 </span>
                 KoolKing <span className="text-cryo">IQ</span>
               </span>
@@ -83,7 +83,7 @@ export default function MobileDrawer() {
                 aria-label="Close menu"
                 className="inline-flex h-11 w-11 items-center justify-center rounded-lg border border-white/10 text-chrome/80 transition-colors hover:border-cryo/40 hover:text-cryo"
               >
-                <X className="h-5 w-5" />
+                <X className="h-5 w-5" aria-hidden="true" />
               </button>
             </div>
 
@@ -96,7 +96,7 @@ export default function MobileDrawer() {
                   onClick={handleNavigate}
                   className="flex min-h-[76px] flex-col items-center justify-center gap-2 rounded-xl border border-white/10 bg-white/5 px-2 py-3 text-center text-xs font-medium text-chrome/80 transition-colors active:border-cryo/40 active:text-cryo"
                 >
-                  <Icon className="h-6 w-6" />
+                  <Icon className="h-6 w-6" aria-hidden="true" />
                   {label}
                 </a>
               ))}

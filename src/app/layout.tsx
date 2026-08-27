@@ -3,6 +3,7 @@ import { Inter, Outfit } from "next/font/google";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import MobileDrawer from "@/components/layout/MobileDrawer";
+import LeadModal from "@/components/sections/LeadModal";
 import "./globals.css";
 
 const outfit = Outfit({
@@ -36,6 +37,7 @@ export default function RootLayout({
       <body className="bg-obsidian font-sans text-chrome antialiased">
         <Navbar />
         <MobileDrawer />
+        <LeadModal />
         <main className="pt-16">{children}</main>
         <Footer />
       </body>

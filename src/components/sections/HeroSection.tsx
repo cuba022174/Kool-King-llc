@@ -75,7 +75,7 @@ export default function HeroSection() {
           transition={{ duration: 0.5 }}
           className="mb-6 inline-flex items-center gap-2 rounded-full border border-cryo/30 bg-cryo/5 px-4 py-1.5 text-xs font-medium uppercase tracking-widest text-cryo"
         >
-          <Radio className="h-3.5 w-3.5 animate-pulse" />
+          <Radio className="h-3.5 w-3.5 animate-pulse" aria-hidden="true" />
           KoolKing IQ &middot; Private Beta
         </motion.div>
 
@@ -117,7 +117,10 @@ export default function HeroSection() {
               className="group inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-cryo to-laser px-7 py-3.5 text-sm font-semibold text-obsidian shadow-cryo transition-shadow duration-200 hover:shadow-laser"
             >
               Request Private Access
-              <ArrowRight className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-0.5" />
+              <ArrowRight
+                className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-0.5"
+                aria-hidden="true"
+              />
             </button>
           </Magnetic>
 
@@ -126,7 +129,7 @@ export default function HeroSection() {
               href="#technology"
               className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-7 py-3.5 text-sm font-semibold text-chrome backdrop-blur-md transition-colors duration-200 hover:border-cryo/40 hover:text-cryo"
             >
-              <PlayCircle className="h-4 w-4" />
+              <PlayCircle className="h-4 w-4" aria-hidden="true" />
               See It In Action
             </a>
           </Magnetic>
