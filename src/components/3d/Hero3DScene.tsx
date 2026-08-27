@@ -11,6 +11,7 @@ import {
   type ReactNode,
 } from "react";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
+import { Environment, Lightformer } from "@react-three/drei";
 import { Bloom, EffectComposer } from "@react-three/postprocessing";
 import * as THREE from "three";
 import CryoCore from "./CryoCore";
@@ -109,14 +110,52 @@ export default function Hero3DScene() {
         frameloop="demand"
         dpr={[1, 2]}
         camera={{ position: [0, 0.4, 4.2], fov: 40 }}
-        gl={{ antialias: true, alpha: true }}
+        gl={{
+          antialias: true,
+          alpha: true,
+          toneMapping: THREE.ACESFilmicToneMapping,
+          toneMappingExposure: 1.15,
+        }}
       >
         {/* No opaque background fill: the canvas clears to transparent
             (gl alpha:true) so the fixed MatrixRain layer shows through
             behind the badge. */}
-        <ambientLight intensity={0.6} />
-        <directionalLight position={[3, 4, 2]} intensity={1.4} color="#e2e8f0" />
-        <pointLight position={[-3, -2, -2]} intensity={1.2} color="#00f0ff" />
+
+        {/* Procedural studio lighting — soft panels baked once into a
+            small environment map, so the titanium gets real reflections
+            without fetching an external HDRI. */}
+        <Environment resolution={256} frames={1} background={false}>
+          <Lightformer
+            form="rect"
+            intensity={2.4}
+            color="#eaf6ff"
+            position={[0, 4, 3]}
+            scale={[4, 3, 1]}
+          />
+          <Lightformer
+            form="rect"
+            intensity={3.2}
+            color="#00f0ff"
+            position={[-4, 0.5, 1.5]}
+            rotation={[0, Math.PI / 2, 0]}
+            scale={[3, 2, 1]}
+          />
+          <Lightformer
+            form="rect"
+            intensity={2.2}
+            color="#3b82f6"
+            position={[3.5, -1, -1.5]}
+            rotation={[0, -Math.PI / 2.6, 0]}
+            scale={[2.5, 2.5, 1]}
+          />
+        </Environment>
+
+        <ambientLight intensity={0.3} />
+        <directionalLight position={[3, 4, 2]} intensity={1.1} color="#e2e8f0" />
+        <pointLight position={[-3, -2, -2]} intensity={1} color="#00f0ff" />
+        {/* Rim light from behind, so the badge separates from the
+            code-rain instead of blending into it. */}
+        <directionalLight position={[-1.5, -1, -4]} intensity={0.7} color="#3b82f6" />
 
         <Suspense fallback={null}>
           <ParallaxRig pointer={pointer}>
