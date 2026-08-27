@@ -5,7 +5,7 @@ import {
   type PointerEvent as ReactPointerEvent,
   type ReactNode,
 } from "react";
-import { motion, useMotionValue, useSpring } from "framer-motion";
+import { motion, useMotionValue, useReducedMotion, useSpring } from "framer-motion";
 import { ArrowRight, PlayCircle, Radio } from "lucide-react";
 import Hero3DScene from "@/components/3d/Hero3DScene";
 import { useAppStore } from "@/store/useAppStore";
@@ -18,12 +18,17 @@ function Magnetic({
   strength?: number;
   children: ReactNode;
 }) {
+  const prefersReducedMotion = useReducedMotion();
   const x = useMotionValue(0);
   const y = useMotionValue(0);
   const springX = useSpring(x, { stiffness: 300, damping: 20, mass: 0.5 });
   const springY = useSpring(y, { stiffness: 300, damping: 20, mass: 0.5 });
 
+  // The pointer-follow pull is a continuous, imperative effect —
+  // MotionConfig's reducedMotion="user" only covers declarative
+  // animate/transition props, so this needs its own explicit guard.
   const handlePointerMove = (event: ReactPointerEvent<HTMLDivElement>) => {
+    if (prefersReducedMotion) return;
     const bounds = event.currentTarget.getBoundingClientRect();
     x.set((event.clientX - (bounds.left + bounds.width / 2)) * strength);
     y.set((event.clientY - (bounds.top + bounds.height / 2)) * strength);
@@ -64,7 +69,7 @@ export default function HeroSection() {
       {/* Readability scrim over the canvas */}
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute inset-0 z-10 bg-gradient-to-b from-obsidian/40 via-obsidian/25 to-obsidian/80"
+        className="pointer-events-none absolute inset-0 z-10 bg-gradient-to-b from-obsidian/35 via-obsidian/20 to-obsidian/55"
       />
 
       {/* Content */}

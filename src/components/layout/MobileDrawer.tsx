@@ -14,7 +14,7 @@ const NAV_LINKS = [
 
 // Large, glove-friendly shortcuts for technicians in the field.
 const QUICK_ACTIONS = [
-  { href: "tel:+18005550142", label: "Call Dispatch", icon: PhoneCall },
+  { href: "tel:+16783919779", label: "Call Dispatch", icon: PhoneCall },
   { href: "#service-areas", label: "Service Areas", icon: MapPin },
   { href: "#technology", label: "Diagnostics", icon: Wrench },
 ];

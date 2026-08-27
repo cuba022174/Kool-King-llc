@@ -13,21 +13,48 @@ import {
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import { Environment, Lightformer } from "@react-three/drei";
 import { Bloom, EffectComposer } from "@react-three/postprocessing";
+import { useReducedMotion } from "framer-motion";
 import * as THREE from "three";
 import CryoCore from "./CryoCore";
 
 type PointerRef = MutableRefObject<{ x: number; y: number }>;
 
+// Roughly CryoCore's entrance duration + a small buffer. Once a
+// reduced-motion viewer's plate has settled there's nothing left to
+// animate, so the render loop can go fully idle instead of ticking
+// forever for no visible change.
+const SETTLE_MS = 1500;
+
 /**
  * The canvas uses frameloop="demand" so it stays idle by default. This
  * keeps a steady stream of frames flowing only while the hero is
- * actually on screen, and lets it fall silent once scrolled away.
+ * actually on screen, lets it fall silent once scrolled away or the
+ * tab is backgrounded, and — for reduced-motion viewers — stops
+ * entirely once the entrance has settled since nothing else moves.
  */
-function InvalidateWhileVisible({ active }: { active: boolean }) {
+function InvalidateWhileVisible({
+  active,
+  reduceMotion,
+}: {
+  active: boolean;
+  reduceMotion: boolean;
+}) {
   const invalidate = useThree((state) => state.invalidate);
+  const stillSettling = useRef(true);
+
+  useEffect(() => {
+    if (!reduceMotion) return;
+    stillSettling.current = true;
+    const timer = window.setTimeout(() => {
+      stillSettling.current = false;
+    }, SETTLE_MS);
+    return () => window.clearTimeout(timer);
+  }, [reduceMotion]);
 
   useFrame(() => {
-    if (active) invalidate();
+    if (!active || document.hidden) return;
+    if (reduceMotion && !stillSettling.current) return;
+    invalidate();
   });
 
   return null;
@@ -36,9 +63,11 @@ function InvalidateWhileVisible({ active }: { active: boolean }) {
 /** Smoothly tilts its children toward the tracked pointer position. */
 function ParallaxRig({
   pointer,
+  reduceMotion,
   children,
 }: {
   pointer: PointerRef;
+  reduceMotion: boolean;
   children: ReactNode;
 }) {
   const rig = useRef<THREE.Group>(null);
@@ -47,6 +76,13 @@ function ParallaxRig({
   useFrame((_, delta) => {
     const group = rig.current;
     if (!group) return;
+
+    // Pointer-driven parallax is exactly the kind of motion
+    // prefers-reduced-motion asks us to drop — keep the plate still.
+    if (reduceMotion) {
+      group.rotation.set(0, 0, 0);
+      return;
+    }
 
     const targetY = pointer.current.x * 0.5;
     const targetX = pointer.current.y * -0.3;
@@ -73,6 +109,7 @@ export default function Hero3DScene() {
   const containerRef = useRef<HTMLDivElement>(null);
   const pointer = useRef({ x: 0, y: 0 });
   const [isVisible, setIsVisible] = useState(false);
+  const prefersReducedMotion = useReducedMotion();
 
   // Only spend GPU time on the demand frameloop while the hero is in view.
   useEffect(() => {
@@ -109,7 +146,7 @@ export default function Hero3DScene() {
       <Canvas
         frameloop="demand"
         dpr={[1, 2]}
-        camera={{ position: [0, 0.4, 4.2], fov: 40 }}
+        camera={{ position: [0, 0, 4.4], fov: 40 }}
         gl={{
           antialias: true,
           alpha: true,
@@ -158,10 +195,8 @@ export default function Hero3DScene() {
         <directionalLight position={[-1.5, -1, -4]} intensity={0.7} color="#3b82f6" />
 
         <Suspense fallback={null}>
-          <ParallaxRig pointer={pointer}>
-            <group position={[0, -0.45, 0]}>
-              <CryoCore scale={1.15} />
-            </group>
+          <ParallaxRig pointer={pointer} reduceMotion={Boolean(prefersReducedMotion)}>
+            <CryoCore scale={1.3} reduceMotion={Boolean(prefersReducedMotion)} />
           </ParallaxRig>
         </Suspense>
 
@@ -174,7 +209,10 @@ export default function Hero3DScene() {
           />
         </EffectComposer>
 
-        <InvalidateWhileVisible active={isVisible} />
+        <InvalidateWhileVisible
+          active={isVisible}
+          reduceMotion={Boolean(prefersReducedMotion)}
+        />
       </Canvas>
     </div>
   );

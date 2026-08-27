@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Mail, MapPin, PhoneCall, Snowflake } from "lucide-react";
+import { Globe, Mail, MapPin, PhoneCall, Snowflake } from "lucide-react";
 
 const NAV_LINKS = [
   { href: "#technology", label: "Technology" },
@@ -20,7 +20,7 @@ export default function Footer() {
             className="flex items-center gap-2.5 font-heading text-lg font-semibold text-chrome"
           >
             <span className="flex h-9 w-9 items-center justify-center rounded-lg border border-cryo/30 bg-cryo/10 text-cryo">
-              <Snowflake className="h-5 w-5" />
+              <Snowflake className="h-5 w-5" aria-hidden="true" />
             </span>
             KoolKing <span className="text-cryo">IQ</span>
           </Link>
@@ -54,19 +54,30 @@ export default function Footer() {
           </h3>
           <ul className="mt-4 space-y-3 text-sm text-chrome/70">
             <li className="flex items-center gap-2">
-              <PhoneCall className="h-4 w-4 text-cryo" />
-              <a href="tel:+18005550142" className="hover:text-cryo">
-                +1 (800) 555-0142
+              <PhoneCall className="h-4 w-4 text-cryo" aria-hidden="true" />
+              <a href="tel:+16783919779" className="hover:text-cryo">
+                (678) 391-9779
               </a>
             </li>
             <li className="flex items-center gap-2">
-              <Mail className="h-4 w-4 text-cryo" />
-              <a href="mailto:hello@koolkingiq.com" className="hover:text-cryo">
-                hello@koolkingiq.com
+              <Mail className="h-4 w-4 text-cryo" aria-hidden="true" />
+              <a href="mailto:ricardo@kool-king-llc.com" className="hover:text-cryo">
+                ricardo@kool-king-llc.com
               </a>
             </li>
             <li className="flex items-center gap-2">
-              <MapPin className="h-4 w-4 text-cryo" />
+              <Globe className="h-4 w-4 text-cryo" aria-hidden="true" />
+              <a
+                href="https://www.kool-king-llc.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:text-cryo"
+              >
+                www.kool-king-llc.com
+              </a>
+            </li>
+            <li className="flex items-center gap-2">
+              <MapPin className="h-4 w-4 text-cryo" aria-hidden="true" />
               Nationwide field service
             </li>
           </ul>
