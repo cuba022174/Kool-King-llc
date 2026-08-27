@@ -1,21 +1,26 @@
 import type { Metadata } from "next";
-import localFont from "next/font/local";
+import { Inter, Outfit } from "next/font/google";
+import Navbar from "@/components/layout/Navbar";
+import Footer from "@/components/layout/Footer";
+import MobileDrawer from "@/components/layout/MobileDrawer";
 import "./globals.css";
 
-const geistSans = localFont({
-  src: "./fonts/GeistVF.woff",
-  variable: "--font-geist-sans",
-  weight: "100 900",
+const outfit = Outfit({
+  subsets: ["latin"],
+  variable: "--font-outfit",
+  weight: ["500", "600", "700"],
 });
-const geistMono = localFont({
-  src: "./fonts/GeistMonoVF.woff",
-  variable: "--font-geist-mono",
-  weight: "100 900",
+
+const inter = Inter({
+  subsets: ["latin"],
+  variable: "--font-inter",
+  weight: ["400", "500", "600"],
 });
 
 export const metadata: Metadata = {
-  title: "Kool King LLC",
-  description: "Kool King LLC",
+  title: "KoolKing IQ | Kool King LLC",
+  description:
+    "KoolKing IQ is the private access platform for Kool King LLC's smart refrigeration and field service technology.",
 };
 
 export default function RootLayout({
@@ -24,11 +29,15 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="dark">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-obsidian text-chrome`}
-      >
-        {children}
+    <html
+      lang="en"
+      className={`dark scroll-smooth ${outfit.variable} ${inter.variable}`}
+    >
+      <body className="bg-obsidian font-sans text-chrome antialiased">
+        <Navbar />
+        <MobileDrawer />
+        <main className="pt-16">{children}</main>
+        <Footer />
       </body>
     </html>
   );
