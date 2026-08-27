@@ -64,7 +64,7 @@ export default function HeroSection() {
       {/* Readability scrim over the canvas */}
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute inset-0 z-10 bg-gradient-to-b from-obsidian/30 via-obsidian/20 to-obsidian"
+        className="pointer-events-none absolute inset-0 z-10 bg-gradient-to-b from-obsidian/40 via-obsidian/25 to-obsidian/80"
       />
 
       {/* Content */}

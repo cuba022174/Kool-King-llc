@@ -111,22 +111,26 @@ export default function Hero3DScene() {
         camera={{ position: [0, 0.4, 4.2], fov: 40 }}
         gl={{ antialias: true, alpha: true }}
       >
-        <color attach="background" args={["#030712"]} />
+        {/* No opaque background fill: the canvas clears to transparent
+            (gl alpha:true) so the fixed MatrixRain layer shows through
+            behind the badge. */}
         <ambientLight intensity={0.6} />
         <directionalLight position={[3, 4, 2]} intensity={1.4} color="#e2e8f0" />
         <pointLight position={[-3, -2, -2]} intensity={1.2} color="#00f0ff" />
 
         <Suspense fallback={null}>
           <ParallaxRig pointer={pointer}>
-            <CryoCore scale={1.1} />
+            <group position={[0, -0.45, 0]}>
+              <CryoCore scale={1.15} />
+            </group>
           </ParallaxRig>
         </Suspense>
 
         <EffectComposer multisampling={0}>
           <Bloom
-            intensity={0.65}
-            luminanceThreshold={0.2}
-            luminanceSmoothing={0.9}
+            intensity={0.45}
+            luminanceThreshold={0.35}
+            luminanceSmoothing={0.85}
             mipmapBlur
           />
         </EffectComposer>
