@@ -38,7 +38,10 @@ export default function RootLayout({
         <Navbar />
         <MobileDrawer />
         <LeadModal />
-        <main className="pt-16">{children}</main>
+        {/* No top padding here: HeroSection handles its own navbar
+            clearance so its 3D canvas can bleed full-height behind the
+            translucent fixed navbar. */}
+        <main>{children}</main>
         <Footer />
       </body>
     </html>
