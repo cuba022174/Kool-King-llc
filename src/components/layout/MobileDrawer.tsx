@@ -5,7 +5,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { Phone, X } from "lucide-react";
 import { useAppStore } from "@/store/useAppStore";
 import { scrollToId } from "@/lib/scroll";
-import { Logo } from "./Logo";
+import { LogoIcon } from "./Logo";
 import { NAV_LINKS } from "./nav-links";
 
 const DISPATCH_PHONE_DISPLAY = "+1 (800) 555-0199";
@@ -79,7 +79,17 @@ export function MobileDrawer() {
             className="fixed inset-y-0 right-0 z-[60] flex w-[88vw] max-w-sm flex-col border-l border-white/10 bg-abyssal-blue shadow-2xl md:hidden"
           >
             <div className="flex h-20 shrink-0 items-center justify-between border-b border-white/10 px-5">
-              <Logo className="h-10 w-auto" />
+              <div className="flex items-center gap-2.5">
+                <LogoIcon className="h-9 w-auto" />
+                <span className="flex flex-col leading-none">
+                  <span className="font-heading text-base font-extrabold uppercase italic tracking-tight text-liquid-chrome">
+                    KoolKing<span className="text-cryo-cyan">IQ</span>
+                  </span>
+                  <span className="text-[9px] font-medium uppercase tracking-wider text-liquid-chrome/50">
+                    by Kool King LLC
+                  </span>
+                </span>
+              </div>
               <button
                 type="button"
                 onClick={closeMobileDrawer}
@@ -127,7 +137,7 @@ export function MobileDrawer() {
                 onClick={handleRequestAccess}
                 className="w-full rounded-2xl bg-gradient-to-r from-laser-blue to-cryo-cyan px-5 py-4 text-base font-semibold text-obsidian shadow-cryo active:scale-[0.98]"
               >
-                Request Private Access
+                Request Early Access
               </button>
             </div>
           </motion.aside>

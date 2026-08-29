@@ -5,8 +5,8 @@ export interface NavLink {
 
 /** Shared between the desktop Navbar and the MobileDrawer. */
 export const NAV_LINKS: NavLink[] = [
-  { href: "#platform", label: "Platform" },
-  { href: "#solutions", label: "Solutions" },
-  { href: "#industries", label: "Industries" },
-  { href: "#contact", label: "Contact" },
+  { href: "#how-it-works", label: "How It Works" },
+  { href: "#problem", label: "The Problem" },
+  { href: "#pattern-engine", label: "Pattern Engine" },
+  { href: "#pricing", label: "Pricing" },
 ];

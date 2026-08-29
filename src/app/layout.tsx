@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { Inter, Outfit } from "next/font/google";
-import { Navbar } from "@/components/layout/Navbar";
+import { SiteHeader } from "@/components/layout/SiteHeader";
 import { MobileDrawer } from "@/components/layout/MobileDrawer";
 import { Footer } from "@/components/layout/Footer";
 import { MatrixRain } from "@/components/effects/MatrixRain";
@@ -29,9 +29,9 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
     >
       <body className="flex min-h-full flex-col bg-obsidian font-sans text-liquid-chrome">
         <MatrixRain />
-        <Navbar />
+        <SiteHeader />
         <MobileDrawer />
-        <main className="flex-1 pt-20">{children}</main>
+        <main className="flex-1 pt-[116px]">{children}</main>
         <Footer />
       </body>
     </html>
