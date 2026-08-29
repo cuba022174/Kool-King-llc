@@ -1,3 +1,13 @@
+const FALLBACK_SANS_FONTS = [
+  "ui-sans-serif",
+  "system-ui",
+  "sans-serif",
+  "Apple Color Emoji",
+  "Segoe UI Emoji",
+  "Segoe UI Symbol",
+  "Noto Color Emoji",
+];
+
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   darkMode: "class",
@@ -23,6 +33,10 @@ module.exports = {
         liquid: {
           chrome: "#E2E8F0",
         },
+      },
+      fontFamily: {
+        sans: ["var(--font-inter)", ...FALLBACK_SANS_FONTS],
+        heading: ["var(--font-outfit)", ...FALLBACK_SANS_FONTS],
       },
       backgroundImage: {
         "obsidian-gradient":
