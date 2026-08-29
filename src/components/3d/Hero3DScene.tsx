@@ -1,17 +1,41 @@
 "use client";
 
-import { useCallback, useRef } from "react";
+import { Suspense, useCallback, useEffect, useRef } from "react";
 import type { PointerEvent as ReactPointerEvent, ReactNode, RefObject } from "react";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
-import type { RootState } from "@react-three/fiber";
 import { Environment, Lightformer, Preload } from "@react-three/drei";
 import { Bloom, EffectComposer } from "@react-three/postprocessing";
 import * as THREE from "three";
-import { CryoCore } from "./CryoCore";
+import { KoolKingLogo3D } from "./KoolKingLogo3D";
 
-const MAX_TILT = 0.35; // radians of parallax tilt at the pointer's edge
-const DAMPING = 6; // higher = the tilt catches up to the pointer faster
-const SETTLE_EPSILON = 0.0005; // stop re-rendering once the tilt is this close
+const MAX_TILT = 0.3; // radians of parallax tilt at the pointer's edge
+const DAMPING = 5; // higher = the tilt catches up to the pointer faster
+
+const BASE_CAMERA_DISTANCE = 6.2;
+// The badge is ~3.2 world units wide - keep this much half-width in frame
+// even on tall, narrow (mobile) viewports instead of letting it clip.
+const MIN_VISIBLE_HALF_WIDTH = 1.9;
+
+/** Pulls the camera back on narrow/tall viewports so the badge never clips. */
+function ResponsiveCamera() {
+  const camera = useThree((state) => state.camera) as THREE.PerspectiveCamera;
+  const size = useThree((state) => state.size);
+
+  useEffect(() => {
+    const aspect = size.width / size.height;
+    const verticalFovRad = (camera.fov * Math.PI) / 180;
+    const requiredDistance =
+      MIN_VISIBLE_HALF_WIDTH / (Math.tan(verticalFovRad / 2) * aspect);
+    // Three.js/R3F objects (the camera included) are meant to be mutated
+    // imperatively - that's the standard, performant pattern here, not a
+    // violation of React's immutability rules.
+    // eslint-disable-next-line react-hooks/immutability
+    camera.position.z = Math.max(BASE_CAMERA_DISTANCE, requiredDistance);
+    camera.updateProjectionMatrix();
+  }, [camera, size]);
+
+  return null;
+}
 
 type Pointer = { x: number; y: number };
 
@@ -21,14 +45,11 @@ interface ParallaxRigProps {
 }
 
 /**
- * Smoothly damps toward the pointer-driven tilt target every frame, and
- * keeps requesting new frames (via invalidate) only while it's still
- * moving - once it settles, rendering stops, which is the whole point of
- * running the canvas in frameloop="demand".
+ * Smoothly damps the group's rotation toward the pointer position every
+ * frame - a parallax tilt layered on top of the badge's own auto-rotation.
  */
 function ParallaxRig({ pointer, children }: ParallaxRigProps) {
   const groupRef = useRef<THREE.Group>(null);
-  const invalidate = useThree((state) => state.invalidate);
 
   useFrame((_, delta) => {
     const group = groupRef.current;
@@ -40,42 +61,34 @@ function ParallaxRig({ pointer, children }: ParallaxRigProps) {
 
     group.rotation.y += (targetY - group.rotation.y) * t;
     group.rotation.x += (targetX - group.rotation.x) * t;
-
-    const remaining =
-      Math.abs(targetY - group.rotation.y) + Math.abs(targetX - group.rotation.x);
-
-    if (remaining > SETTLE_EPSILON) {
-      invalidate();
-    }
   });
 
   return <group ref={groupRef}>{children}</group>;
 }
 
 /**
- * The hero 3D canvas: a demand-driven render loop (renders only when
- * something actually changes), a pointer-tracked parallax tilt on the
- * CryoCore, and an optimized Bloom pass tuned to catch just the crown's
- * jewels and the crystal core's glow.
+ * The hero 3D canvas: the Kool King badge modeled and animated in 3D
+ * (see KoolKingLogo3D), a pointer-tracked parallax tilt layered on top of
+ * its own auto-rotation, and an optimized Bloom pass tuned to the badge's
+ * snowflake and accent glow.
+ *
+ * The badge animates continuously, so this canvas renders every frame
+ * (frameloop="always", the R3F default) rather than on demand.
  */
 export function Hero3DScene() {
   const pointer = useRef<Pointer>({ x: 0, y: 0 });
-  const invalidateRef = useRef<RootState["invalidate"] | null>(null);
 
   const updatePointer = useCallback((event: ReactPointerEvent<HTMLDivElement>) => {
     const bounds = event.currentTarget.getBoundingClientRect();
     const x = ((event.clientX - bounds.left) / bounds.width) * 2 - 1;
     const y = ((event.clientY - bounds.top) / bounds.height) * 2 - 1;
-
     pointer.current.x = THREE.MathUtils.clamp(x, -1, 1);
     pointer.current.y = THREE.MathUtils.clamp(y, -1, 1);
-    invalidateRef.current?.();
   }, []);
 
   const resetPointer = useCallback(() => {
     pointer.current.x = 0;
     pointer.current.y = 0;
-    invalidateRef.current?.();
   }, []);
 
   return (
@@ -85,31 +98,22 @@ export function Hero3DScene() {
       onPointerLeave={resetPointer}
     >
       <Canvas
-        frameloop="demand"
         dpr={[1, 2]}
-        shadows
-        gl={{ antialias: true, powerPreference: "high-performance" }}
-        camera={{ position: [0, 0.6, 5.6], fov: 32 }}
-        onCreated={({ invalidate }) => {
-          invalidateRef.current = invalidate;
-        }}
+        gl={{ antialias: true, alpha: true, powerPreference: "high-performance" }}
+        camera={{ position: [0, 0.1, 6.2], fov: 32 }}
+        onCreated={({ gl }) => gl.setClearColor(0x000000, 0)}
       >
-        <color attach="background" args={["#030712"]} />
-
-        <ambientLight intensity={0.4} />
-        <directionalLight
-          position={[3, 4, 2]}
-          intensity={1.6}
-          color="#e2e8f0"
-          castShadow
-        />
+        {/* No scene background - the page's Matrix rain shows through. */}
+        <ResponsiveCamera />
+        <ambientLight intensity={0.5} />
+        <directionalLight position={[3, 4, 2]} intensity={1.4} color="#e2e8f0" />
         <pointLight position={[-2.5, -1, -2]} intensity={0.5} color="#3b82f6" />
 
         {/*
           Procedurally generated environment map (studio-style light panels
-          captured once into a cubemap) - gives the titanium crown real
-          reflections without fetching an external HDRI file over the
-          network, so the scene never depends on a third-party CDN.
+          captured once into a cubemap) - gives the metal real reflections
+          without fetching an external HDRI file over the network, so the
+          scene never depends on a third-party CDN.
         */}
         <Environment resolution={256} frames={1}>
           <Lightformer
@@ -143,17 +147,19 @@ export function Hero3DScene() {
           />
         </Environment>
 
-        <ParallaxRig pointer={pointer}>
-          <CryoCore />
-        </ParallaxRig>
+        <Suspense fallback={null}>
+          <ParallaxRig pointer={pointer}>
+            <KoolKingLogo3D />
+          </ParallaxRig>
+        </Suspense>
 
         <EffectComposer multisampling={0}>
           <Bloom
-            intensity={0.9}
-            luminanceThreshold={0.25}
-            luminanceSmoothing={0.2}
+            intensity={0.7}
+            luminanceThreshold={0.75}
+            luminanceSmoothing={0.15}
             mipmapBlur
-            radius={0.7}
+            radius={0.5}
           />
         </EffectComposer>
 

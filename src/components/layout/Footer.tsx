@@ -1,4 +1,5 @@
-import { Mail, MapPin, Phone, Snowflake } from "lucide-react";
+import { Mail, MapPin, Phone } from "lucide-react";
+import { Logo } from "./Logo";
 import { NAV_LINKS } from "./nav-links";
 
 export function Footer() {
@@ -8,14 +9,7 @@ export function Footer() {
     <footer className="border-t border-white/10 bg-abyssal-blue/60">
       <div className="mx-auto grid max-w-7xl gap-10 px-4 py-14 sm:px-6 lg:grid-cols-[1.5fr_1fr_1fr] lg:px-8">
         <div className="space-y-4">
-          <div className="flex items-center gap-2.5">
-            <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-laser-blue to-cryo-cyan">
-              <Snowflake className="h-4 w-4 text-obsidian" strokeWidth={2.5} />
-            </span>
-            <span className="font-heading text-base font-semibold text-liquid-chrome">
-              KoolKing<span className="text-cryo-cyan"> IQ</span>
-            </span>
-          </div>
+          <Logo className="h-12 w-auto" />
           <p className="max-w-sm text-sm leading-relaxed text-liquid-chrome/60">
             Real-time field intelligence for HVAC and refrigeration crews —
             built for the truck, not the boardroom.
@@ -54,10 +48,10 @@ export function Footer() {
             <li className="flex items-center gap-2">
               <Mail className="h-4 w-4 text-cryo-cyan" />
               <a
-                href="mailto:hello@koolkingiq.com"
+                href="mailto:hello@koolkingllc.com"
                 className="hover:text-cryo-cyan"
               >
-                hello@koolkingiq.com
+                hello@koolkingllc.com
               </a>
             </li>
             <li className="flex items-center gap-2">
@@ -70,7 +64,7 @@ export function Footer() {
 
       <div className="border-t border-white/10 px-4 py-6 sm:px-6 lg:px-8">
         <p className="text-center text-xs text-liquid-chrome/40">
-          © {year} KoolKing IQ. All rights reserved.
+          © {year} Kool King LLC. All rights reserved.
         </p>
       </div>
     </footer>

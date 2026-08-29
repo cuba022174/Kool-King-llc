@@ -1,10 +1,10 @@
 "use client";
 
 import { useEffect, useState, type MouseEvent } from "react";
-import Link from "next/link";
-import { Menu, Snowflake } from "lucide-react";
+import { Menu } from "lucide-react";
 import { useAppStore } from "@/store/useAppStore";
 import { scrollToId } from "@/lib/scroll";
+import { Logo } from "./Logo";
 import { NAV_LINKS } from "./nav-links";
 
 export function Navbar() {
@@ -36,20 +36,7 @@ export function Navbar() {
           isScrolled ? "shadow-[0_8px_30px_-14px_rgba(0,240,255,0.35)]" : ""
         }`}
       >
-        {/* Logo badge */}
-        <Link href="/" className="flex shrink-0 items-center gap-2.5">
-          <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-laser-blue to-cryo-cyan shadow-cryo">
-            <Snowflake className="h-5 w-5 text-obsidian" strokeWidth={2.5} />
-          </span>
-          <span className="flex flex-col leading-none">
-            <span className="font-heading text-lg font-semibold tracking-tight text-liquid-chrome">
-              KoolKing<span className="text-cryo-cyan"> IQ</span>
-            </span>
-            <span className="text-[10px] uppercase tracking-[0.2em] text-liquid-chrome/50">
-              Field Intelligence
-            </span>
-          </span>
-        </Link>
+        <Logo className="h-11 w-auto sm:h-12" priority />
 
         {/* Desktop links */}
         <ul className="hidden items-center gap-8 md:flex">

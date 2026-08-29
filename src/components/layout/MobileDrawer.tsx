@@ -2,9 +2,10 @@
 
 import { useEffect } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { Phone, Snowflake, X } from "lucide-react";
+import { Phone, X } from "lucide-react";
 import { useAppStore } from "@/store/useAppStore";
 import { scrollToId } from "@/lib/scroll";
+import { Logo } from "./Logo";
 import { NAV_LINKS } from "./nav-links";
 
 const DISPATCH_PHONE_DISPLAY = "+1 (800) 555-0199";
@@ -78,14 +79,7 @@ export function MobileDrawer() {
             className="fixed inset-y-0 right-0 z-[60] flex w-[88vw] max-w-sm flex-col border-l border-white/10 bg-abyssal-blue shadow-2xl md:hidden"
           >
             <div className="flex h-20 shrink-0 items-center justify-between border-b border-white/10 px-5">
-              <div className="flex items-center gap-2.5">
-                <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-laser-blue to-cryo-cyan">
-                  <Snowflake className="h-4 w-4 text-obsidian" strokeWidth={2.5} />
-                </span>
-                <span className="font-heading text-base font-semibold text-liquid-chrome">
-                  KoolKing<span className="text-cryo-cyan"> IQ</span>
-                </span>
-              </div>
+              <Logo className="h-10 w-auto" />
               <button
                 type="button"
                 onClick={closeMobileDrawer}
