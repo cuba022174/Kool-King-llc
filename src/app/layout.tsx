@@ -20,10 +20,29 @@ const inter = Inter({
   weight: ["400", "500", "600"],
 });
 
+const SITE_URL = "https://www.kool-king-llc.com";
+const SITE_TITLE = "KoolKing IQ | Kool King LLC";
+const SITE_DESCRIPTION =
+  "KoolKing IQ is the private access platform for Kool King LLC's smart refrigeration and field service technology.";
+
 export const metadata: Metadata = {
-  title: "KoolKing IQ | Kool King LLC",
-  description:
-    "KoolKing IQ is the private access platform for Kool King LLC's smart refrigeration and field service technology.",
+  // NOTE: update this once the app has a confirmed deployment domain —
+  // it's what Next.js resolves the og:image/twitter:image URLs against.
+  metadataBase: new URL(SITE_URL),
+  title: SITE_TITLE,
+  description: SITE_DESCRIPTION,
+  openGraph: {
+    title: SITE_TITLE,
+    description: SITE_DESCRIPTION,
+    url: SITE_URL,
+    siteName: "KoolKing IQ",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: SITE_TITLE,
+    description: SITE_DESCRIPTION,
+  },
 };
 
 export default function RootLayout({
